@@ -1,0 +1,4 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1990
+
+The script is based on the wiki.vim developed by Andreas Kneib <aporia@web.de> and Mathias Panzenböck <grosser.meister.morti@gmx.at>.  The formatting rules are mainly derived (with modification) from the perl module Kwiki::Formatter. http://search.cpan.org/~ingy/Kwiki-0.39/lib/Kwiki/Formatter.pm
+
