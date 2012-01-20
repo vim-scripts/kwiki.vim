@@ -3,8 +3,8 @@
 " Maintainer: Ruey-Cheng Chen <rueycheng@gmail.com>
 " License: This file can be redistribued and/or modified under the 
 "   same terms as Vim itself
-" Version: 0.1
-" Last Change: 2007-08-13
+" Version: 0.2
+" Last Change: 2012-01-20
 "
 " Description:
 " The script is based on the wiki.vim developed by Andreas Kneib
@@ -23,6 +23,8 @@
 " 2007-08-13 v0.1
 "     Initial release
 "
+" 2012-01-20 v0.2
+"     Modify the patterns for kwikiParagraph, kwikiUlist, and kwikiOlist
 
 " Quit if syntax file is already loaded
 if version < 600
@@ -43,45 +45,40 @@ command! -nargs=+ KwikiHiDef hi def <args>
 syn region kwikiComment start=/^#\s/ end=/$/ oneline
 syn match kwikiLine /^----\+\s*$/
 syn region kwikiHeading start=/^=\{1,6}\s\+./ end=/$/ oneline
-syn region kwikiParagraph start=/\(^\([=\*0]\+ \|#\||\|\s\|\.\w\+\s*\n\|-\{4,}\s*\n\)\@!.*\S.*\)\+/ end=/^\s*$/ contains=@kwikiElement,@kwikiStyle
-syn region kwikiUlist start=/\(^\*\+\)\@<=\s\+/ end=/$/ contains=@kwikiElement,@kwikiStyle
-syn region kwikiOlist start=/\(^0\+\)\@<=\s\+/ end=/$/ contains=@kwikiElement,@kwikiStyle
-syn region kwikiPreformatted start=/^ \+\S/ end=/$/ oneline
+syn region kwikiParagraph start=/^\([=\*0]\+\s\|#\||\|\s\|\.\w\+\s*\n\|-\{4,}\s*\n\)\@!.*/ end=/$/ contains=@kwikiElement,@kwikiStyle oneline
+syn region kwikiUlist start=/^\*\+\s\+/ end=/$/ contains=@kwikiElement,@kwikiStyle oneline
+syn region kwikiOlist start=/^0\+\s\+/ end=/$/ contains=@kwikiElement,@kwikiStyle oneline
+syn region kwikiPreformatted start=/^\s\+\S/ end=/$/ oneline
 syn region kwikiTable start=/^|/ end=/|$/ oneline
 
 " Style
 syn cluster kwikiStyle contains=kwikiStrong,kwikiEmphasize,kwikiUnderline,kwikiInline,kwikiDelete,kwikiNone
-"--------------------------------------------------
-" syn region kwikiStrong start=/\(^\|[^A-Za-z0-9]\@<=\)\*\S\@=/ end=/\*\([^A-Za-z0-9]\|\s\|$\)\@=/
-" syn region kwikiEmphasize start=/\(^\|[^A-Za-z0-9]\@<=\)\/\(\S[^\/]*\/\(\W\|\s\|$\)\)\@=/ end=/\/\([^A-Za-z0-9]\|\s\|$\)\@=/
-" syn region kwikiUnderline start=/\(^\|[^A-Za-z0-9]\@<=\)_\S\@=/ end=/_\([^A-Za-z0-9]\|\s\|$\)\@=/
-"-------------------------------------------------- 
-syn match kwikiStrong /\(^\|[^A-Za-z0-9]\@<=\)\*\S\@=.\{-}\(\n.\{-1,}\)\{-}\*\([^A-Za-z0-9]\|\s\|$\)\@=/ contained contains=@kwikiElement,kwikiSE,kwikiSU
-syn match kwikiEmphasize /\(^\|[^A-Za-z0-9]\@<=\)\/\(\S[^\/]*\/\(\W\|\s\|$\)\)\@=.\{-}\(\n.\{-1,}\)\{-}\/\([^A-Za-z0-9]\|\s\|$\)\@=/ contained contains=@kwikiElement,kwikiES,kwikiEU
-syn match kwikiUnderline /\(^\|[^A-Za-z0-9]\@<=\)_\S\@=.\{-}\(\n.\{-1,}\)\{-}_\([^A-Za-z0-9]\|\s\|$\)\@=/ contained contains=@kwikiElement,kwikiUS,kwikiUE
+syn match kwikiStrong /\(^\|[^A-Za-z0-9]\@<=\)\*\S.\{-}\*\([^A-Za-z0-9]\|\s\|$\)\@=/ contained contains=@kwikiElement,kwikiSE,kwikiSU
+syn match kwikiEmphasize /\(^\|[^A-Za-z0-9]\@<=\)\/\S.\{-}\/\([^A-Za-z0-9]\|\s\|$\)\@=/ contained contains=@kwikiElement,kwikiES,kwikiEU
+syn match kwikiUnderline /\(^\|[^A-Za-z0-9]\@<=\)_\S.\{-}_\([^A-Za-z0-9]\|\s\|$\)\@=/ contained contains=@kwikiElement,kwikiUS,kwikiUE
 syn region kwikiInline start=/\(^\|[^A-Za-z0-9]\@<=\)\[=/ end=/\]\([^A-Za-z0-9]\|\s\|$\)\@=/ contained
 syn region kwikiDelete start=/\(^\|[^A-Za-z0-9]\@<=\)-\([^- ]\)\@=/ end=/-\([^A-Za-z0-9]\|\s\|$\)\@=/ contained
 syn match kwikiNone /\/\// contained contains=NONE transparent
 
 " Sub-style
-syn match kwikiSE /\/.\{-}\(\n.\{-1,}\)\{-}\// contained contains=kwikiSEU
-syn match kwikiSU /_.\{-}\(\n.\{-1,}\)\{-}_/ contained contains=kwikiSUE
-syn match kwikiES /\*.\{-}\(\n.\{-1,}\)\{-}\*/ contained contains=kwikiESU
-syn match kwikiEU /_.\{-}\(\n.\{-1,}\)\{-}_/ contained contains=kwikiEUS
-syn match kwikiUS /\*.\{-}\(\n.\{-1,}\)\{-}\*/ contained contains=kwikiUSE
-syn match kwikiUE /\/.\{-}\(\n.\{-1,}\)\{-}\// contained contains=kwikiUES
-syn match kwikiSEU /_.\{-}\(\n.\{-1,}\)\{-}_/ contained contains=NONE
-syn match kwikiSUE /\/.\{-}\(\n.\{-1,}\)\{-}\// contained contains=NONE
-syn match kwikiESU /_.\{-}\(\n.\{-1,}\)\{-}_/ contained contains=NONE
-syn match kwikiEUS /\*.\{-}\(\n.\{-1,}\)\{-}\*/ contained contains=NONE
-syn match kwikiUSE /\/.\{-}\(\n.\{-1,}\)\{-}\// contained contains=NONE
-syn match kwikiUES /\*.\{-}\(\n.\{-1,}\)\{-}\*/ contained contains=NONE
+syn match kwikiSE /\/\S.\{-}\// contained contains=kwikiSEU
+syn match kwikiSU /_\S.\{-}_/ contained contains=kwikiSUE
+syn match kwikiES /\*\S.\{-}\*/ contained contains=kwikiESU
+syn match kwikiEU /_\S.\{-}_/ contained contains=kwikiEUS
+syn match kwikiUS /\*\S.\{-}\*/ contained contains=kwikiUSE
+syn match kwikiUE /\/\S.\{-}\// contained contains=kwikiUES
+syn match kwikiSEU /_\S.\{-}_/ contained contains=NONE
+syn match kwikiSUE /\/\S.\{-}\// contained contains=NONE
+syn match kwikiESU /_\S.\{-}_/ contained contains=NONE
+syn match kwikiEUS /\*\S.\{-}\*/ contained contains=NONE
+syn match kwikiUSE /\/\S.\{-}\// contained contains=NONE
+syn match kwikiUES /\*\S.\{-}\*/ contained contains=NONE
 
 " Entity
 syn cluster kwikiEntity contains=kwikiMDash,kwikiNDash,kwikiAsis
 syn match kwikiMDash /-\{3}[^-]\@=/ contained
 syn match kwikiNDash /-\{2}[^-]\@=/ contained
-syn region  kwikiAsis            start=/{{/ end=/}}/
+syn region kwikiAsis start=/{{/ end=/}}/
 
 " Link, NoLink, and TitledLink
 syn cluster kwikiLink contains=kwikiForcedLink,kwikiHyperLink,kwikiWikiLink,kwikiMailLink
@@ -161,7 +158,3 @@ delcommand KwikiHiDef
 let b:current_syntax = "kwiki"
 
 "EOF vim: tw=78:ft=vim:ts=8
-
-
-
-
